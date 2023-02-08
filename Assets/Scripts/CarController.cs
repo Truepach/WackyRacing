@@ -15,7 +15,7 @@ public class CarController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
         if (GameManager.instance.isGameStarted)
         {
@@ -29,12 +29,12 @@ public class CarController : MonoBehaviour
         }
     }
 
-    void Move()
+    public virtual void Move()
     {
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
     }
 
-    void CheckInput() //ABSTRACTION
+    public virtual void CheckInput() //ABSTRACTION
     {
         //if first input than ignore 
         if(firstInput)
@@ -49,7 +49,7 @@ public class CarController : MonoBehaviour
 
     }
 
-    void ChangeDirection()  //ABSTRACTION
+    public virtual void ChangeDirection()  //ABSTRACTION
     {
         if(movingLeft)
         {
