@@ -31,7 +31,7 @@ public class TitleCar : CarController
         }
     }
 
-    public override void Move() //INHERITANCE
+    public override void Move() //POLYMORPHISM
     {
         float y = Mathf.Sin(Time.time * moveSpeed) * amplitude;
         transform.position = new Vector3(transform.position.x + moveSpeed * Time.deltaTime, y, transform.position.z);
