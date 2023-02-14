@@ -7,12 +7,17 @@ using UnityEngine.SceneManagement;
 
 public class MenuUiHandler : MonoBehaviour
 {
+    public static MenuUiHandler Instance;
     public TitleCar titleCar;
+    public TMPro.TextMeshProUGUI highScoreText;
+    private HighScore highScore;
 
 
     private void Start()
     {
-
+        highScore = FindObjectOfType<HighScore>();
+        SetHighScore();
+ 
     }
 
     public void StartGame()
@@ -21,7 +26,8 @@ public class MenuUiHandler : MonoBehaviour
     }
     public IEnumerator CheckStart()
     {
-
+        Audio.Instance.PlaySoundEffectWithDelay(0);
+        
         float timer = 4f;
         while (timer > 0)
         {
@@ -30,5 +36,20 @@ public class MenuUiHandler : MonoBehaviour
             yield return null;
         }
         SceneManager.LoadScene(1);
+        gameObject.SetActive(false);
+
+    }
+
+    public void SetHighScore()
+    {
+        int score = highScore.highScore;
+
+        highScoreText.text = "Highscore: " + score;
+
+    }
+
+    public void MenuUiLoad()
+    {
+        gameObject.SetActive(true);
     }
 }

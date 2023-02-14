@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public bool isGameStarted = false;
 
     public TMPro.TextMeshProUGUI scoreText;
+    private HighScore highScoreScript;
+    private MenuUiHandler menuUiHandler;
 
     int score = 0;
     private void Awake()
@@ -25,7 +27,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        highScoreScript = FindObjectOfType<HighScore>();
+        menuUiHandler= FindObjectOfType<MenuUiHandler>();
     }
 
     // Update is called once per frame
@@ -52,12 +55,27 @@ public class GameManager : MonoBehaviour
     {
         platformSpawner.SetActive(false);
         isGameStarted = false;
-        Invoke("ReloadLevel", 1f);
+        GameObject canvas = GameObject.Find("MMCanvas");
+        if (canvas != null)
+        {
+            canvas.SetActive(true);
+        }
+        StopCoroutine("UpdateScore");
+        CheckScore();
+        //Invoke("ReloadLevel", 1f);
+        Invoke("MainMenu", 1f);
     }
 
     void ReloadLevel()
     {
         SceneManager.LoadScene("GameRun");
+    }
+
+    void MainMenu()
+    {
+
+        SceneManager.LoadScene(0);
+
     }
 
     IEnumerator UpdateScore()
@@ -70,5 +88,15 @@ public class GameManager : MonoBehaviour
 
 
         }
+    }
+
+    public void CheckScore()
+    {
+        if (score > highScoreScript.highScore)
+        {
+            highScoreScript.highScore = score;
+            highScoreScript.SaveHighScore();
+
+        }   
     }
 }
