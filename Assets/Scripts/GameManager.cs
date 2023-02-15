@@ -10,11 +10,15 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameObject platformSpawner;
     public GameObject gamePlayUi;
+    
     public bool isGameStarted = false;
 
     public TMPro.TextMeshProUGUI scoreText;
+    public TMPro.TextMeshProUGUI startText;
+    public TMPro.TextMeshProUGUI endText;
     private HighScore highScoreScript;
     private MenuUiHandler menuUiHandler;
+    private CarController carController;
 
     int score = 0;
     private void Awake()
@@ -29,7 +33,8 @@ public class GameManager : MonoBehaviour
     {
         highScoreScript = FindObjectOfType<HighScore>();
         menuUiHandler= FindObjectOfType<MenuUiHandler>();
-    }
+        carController= FindObjectOfType<CarController>();
+}
 
     // Update is called once per frame
     void Update()
@@ -46,6 +51,7 @@ public class GameManager : MonoBehaviour
     public void GameStart()
     {
         isGameStarted = true;
+        startText.gameObject.SetActive(false);
         platformSpawner.SetActive(true);
         gamePlayUi.SetActive(true);
         StartCoroutine(UpdateScore());
@@ -73,17 +79,36 @@ public class GameManager : MonoBehaviour
 
     void MainMenu()
     {
-
-        SceneManager.LoadScene(0);
+        endText.gameObject.SetActive(true);
+        if (Input.GetMouseButtonDown(0))
+        {
+            SceneManager.LoadScene(0);
+        }
 
     }
 
     IEnumerator UpdateScore()
     {
-        while (true)
+        while (isGameStarted)
         {
             yield return new WaitForSeconds(1f);
-            score++;
+            float checkSpeed = carController.moveSpeed;
+            if (checkSpeed >= 8)
+            {
+                score += 4;
+            }
+            else if (checkSpeed >4 && checkSpeed <8 )
+            {
+                score += 2;
+            }
+            else if (checkSpeed < 2)
+            {
+                score--;
+            }
+            else
+            {
+                score++;
+            }
             scoreText.text = score.ToString();
 
 

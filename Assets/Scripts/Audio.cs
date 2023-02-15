@@ -60,4 +60,11 @@ public class Audio : MonoBehaviour
             Invoke("PlaySoundEffect", 1f);
         }
     }
+
+    public void PlayPickupSound()
+    {
+        
+        audioSource.PlayOneShot(soundEffects[2]);
+
+    }    
 }

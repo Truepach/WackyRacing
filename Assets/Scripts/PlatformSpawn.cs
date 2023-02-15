@@ -10,11 +10,18 @@ public class PlatformSpawn : MonoBehaviour
     Vector3 newPos;
 
     bool stop;
+
+    public PowerUps powerUps;
+
+    private int platformCounter;
+    private int powerUpSpawnTime;
     // Start is called before the first frame update
     void Start()
     {
+
         lastPos = lastPlatform.position;
-        StartCoroutine(SpawnPlatforms());  
+        StartCoroutine(SpawnPlatforms());
+        
     }
 
     // Update is called once per frame
@@ -38,6 +45,17 @@ public class PlatformSpawn : MonoBehaviour
         }
     }
 
+    private void SpawnPowerUp()
+    {
+        int randomIndex = Random.Range(0, powerUps.randomSpawn.Length);
+        powerUpSpawnTime = powerUps.randomSpawn[randomIndex];
+        if(platformCounter % powerUpSpawnTime == 0)
+        {
+            Vector3 powerPos = new Vector3(newPos.x, newPos.y + 1f, newPos.z);
+            powerUps.SpawnPowerUp(powerPos);
+        }
+    }
+
 
 
     IEnumerator SpawnPlatforms()
@@ -46,6 +64,8 @@ public class PlatformSpawn : MonoBehaviour
         {
             GeneratePosition();
             Instantiate(platform, newPos, Quaternion.identity);
+            platformCounter++;
+            SpawnPowerUp();
             lastPos = newPos;
             yield return new WaitForSeconds(0.1f);
         }

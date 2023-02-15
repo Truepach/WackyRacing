@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    public float moveSpeed;
+    public float moveSpeed = 4f;
 
     bool movingLeft = true;
     bool firstInput = true;
+    bool powerUp = false;
+    int powerUpType;
+
+    public GameObject pickUpEffect;
+    private Audio audioPlayer;
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioPlayer = FindObjectOfType<Audio>();
     }
 
     // Update is called once per frame
@@ -19,8 +24,9 @@ public class CarController : MonoBehaviour
     {
         if (GameManager.instance.isGameStarted)
         {
+            CheckPowerUp();
             Move();
-            CheckInput();
+            CheckInput();            
         }
 
         if(transform.position.y <= -2)
@@ -63,4 +69,44 @@ public class CarController : MonoBehaviour
 
         }
     }
+
+    public virtual void CheckPowerUp()
+    {
+        if (powerUp)
+        {
+            if (powerUpType == 1)
+            {
+                moveSpeed += 1;
+            }
+            else if (powerUpType == 2)
+            {
+                if (moveSpeed > 1)
+                {
+                    moveSpeed -= 1;
+                }
+            }
+            powerUp = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PowerUp1")
+        {
+            powerUpType = 1;
+            Destroy(other.gameObject);
+            Instantiate(pickUpEffect, other.transform.position, pickUpEffect.transform.rotation);
+            powerUp = true;
+            audioPlayer.PlayPickupSound();
+        }
+        else if (other.gameObject.tag == "PowerUp2")
+        {
+            powerUpType = 2;
+            Destroy(other.gameObject);
+            Instantiate(pickUpEffect, other.transform.position, pickUpEffect.transform.rotation);
+            powerUp = true;
+            audioPlayer.PlayPickupSound();
+        }
+    }
+
 }
